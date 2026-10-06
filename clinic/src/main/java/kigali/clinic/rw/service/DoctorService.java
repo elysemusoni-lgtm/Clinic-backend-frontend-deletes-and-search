@@ -1,0 +1,134 @@
+package kigali.clinic.rw.service;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import kigali.clinic.rw.domain.Doctor;
+import kigali.clinic.rw.domain.Office;
+import kigali.clinic.rw.domain.Specialization;
+import kigali.clinic.rw.repository.DoctorRepository;
+import kigali.clinic.rw.repository.OfficeRepository;
+import kigali.clinic.rw.repository.SpecializationRepository;
+
+@Service
+public class DoctorService {
+
+    @Autowired
+    private DoctorRepository doctorRepository;
+
+    @Autowired
+    private SpecializationRepository specializationRepository;
+
+    @Autowired
+    private OfficeRepository officeRepository;
+
+    @Transactional
+    public Doctor createDoctor(Doctor doctor) {
+        List<UUID> specializationIds = getSpecializationIds(doctor.getSpecializations());
+        doctor.setOffice(findOffice(doctor.getOffice()));
+        doctor.setSpecializations(new ArrayList<>());
+        Doctor savedDoctor = doctorRepository.save(doctor);
+        associateWithSpecializations(savedDoctor, specializationIds);
+        return savedDoctor;
+    }
+
+    public List<Doctor> getAllDoctors() {
+        return doctorRepository.findAll();
+    }
+
+    public List<Doctor> findDoctorsByLastName(String lastName) {
+        return doctorRepository.findByLastNameIgnoreCaseOrderByFirstNameAsc(lastName);
+    }
+
+    public List<Doctor> findDoctorsByFirstName(String firstName) {
+        return doctorRepository.findByFirstNameIgnoreCaseOrderByLastNameAsc(firstName);
+    }
+
+    public List<Doctor> findDoctorsBySpecializationName(String name) {
+        return doctorRepository.findDistinctBySpecializations_NameIgnoreCaseOrderByLastNameAscFirstNameAsc(name);
+    }
+
+    public Doctor getDoctorById(UUID id) {
+        return doctorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Doctor not found with id: " + id));
+    }
+
+    @Transactional
+    public Doctor updateDoctor(UUID id, Doctor newData) {
+        Doctor doctor = getDoctorById(id);
+        List<UUID> specializationIds = getSpecializationIds(newData.getSpecializations());
+        doctor.setFirstName(newData.getFirstName());
+        doctor.setLastName(newData.getLastName());
+        doctor.setDateOfBirth(newData.getDateOfBirth());
+        if (newData.getOffice() != null) {
+            doctor.setOffice(findOffice(newData.getOffice()));
+        }
+        Doctor savedDoctor = doctorRepository.save(doctor);
+        associateWithSpecializations(savedDoctor, specializationIds);
+        return savedDoctor;
+    }
+
+    @Transactional
+    public void deleteDoctor(UUID id) {
+        Doctor doctor = getDoctorById(id);
+        for (Specialization specialization : doctor.getSpecializations()) {
+            specialization.getDoctors().removeIf(linkedDoctor -> linkedDoctor.getId().equals(id));
+            specializationRepository.save(specialization);
+        }
+        doctorRepository.deleteById(id);
+    }
+
+    private List<UUID> getSpecializationIds(List<Specialization> specializations) {
+        if (specializations == null) {
+            return List.of();
+        }
+        return specializations.stream()
+                .map(specialization -> {
+                    if (specialization == null || specialization.getId() == null) {
+                        throw new IllegalArgumentException("Each specialization must have an id");
+                    }
+                    return specialization.getId();
+                })
+                .distinct()
+                .toList();
+    }
+
+    private Office findOffice(Office office) {
+        if (office == null) {
+            return null;
+        }
+        if (office.getId() == null) {
+            throw new IllegalArgumentException("Office must have an id");
+        }
+        return officeRepository.findById(office.getId())
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Office not found with id: " + office.getId()));
+    }
+
+    private void associateWithSpecializations(Doctor doctor, List<UUID> specializationIds) {
+        List<Specialization> selected = specializationRepository.findAllById(specializationIds);
+        if (selected.size() != specializationIds.size()) {
+            throw new IllegalArgumentException("One or more specializations were not found");
+        }
+
+        for (Specialization specialization : doctor.getSpecializations()) {
+            if (!specializationIds.contains(specialization.getId())) {
+                specialization.getDoctors().removeIf(linkedDoctor -> linkedDoctor.getId().equals(doctor.getId()));
+                specializationRepository.save(specialization);
+            }
+        }
+        for (Specialization specialization : selected) {
+            if (specialization.getDoctors().stream()
+                    .noneMatch(linkedDoctor -> linkedDoctor.getId().equals(doctor.getId()))) {
+                specialization.getDoctors().add(doctor);
+                specializationRepository.save(specialization);
+            }
+        }
+        doctor.setSpecializations(selected);
+    }
+}
