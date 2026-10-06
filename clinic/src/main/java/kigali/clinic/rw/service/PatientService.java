@@ -31,6 +31,10 @@ public class PatientService {
         return patientRepository.findAll();
     }
 
+    public List<Patient> getFrequentPatients(int minAppointments) {
+        return patientRepository.findFrequentPatients(minAppointments);
+    }
+
     public List<Patient> getPatientsOfDoctor(UUID doctorId) {
         if (!doctorRepository.existsById(doctorId)) {
             throw new ResponseStatusException(

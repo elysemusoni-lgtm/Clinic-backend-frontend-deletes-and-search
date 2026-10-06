@@ -6,8 +6,10 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import kigali.clinic.rw.domain.Appointment;
 import kigali.clinic.rw.domain.AppointmentStatus;
@@ -19,8 +21,31 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
 
     List<Appointment> findByStatusOrderByAppointmentDateAsc(AppointmentStatus status);
 
+    @Query("""
+            SELECT a.status, COUNT(a)
+            FROM Appointment a
+            WHERE a.status IS NOT NULL
+            GROUP BY a.status
+            """)
+    List<Object[]> countAppointmentsByStatus();
+
     List<Appointment> findByAppointmentDateBetweenOrderByAppointmentDateAsc(
             java.sql.Date start, java.sql.Date end);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Transactional
+    @Query("""
+            UPDATE Appointment a
+            SET a.status = :cancelledStatus
+            WHERE a.doctor.id = :doctorId
+              AND a.appointmentDate = :appointmentDate
+              AND (a.status IS NULL OR a.status <> :completedStatus)
+            """)
+    int cancelDoctorAppointmentsForDate(
+            @Param("doctorId") UUID doctorId,
+            @Param("appointmentDate") java.sql.Date appointmentDate,
+            @Param("cancelledStatus") AppointmentStatus cancelledStatus,
+            @Param("completedStatus") AppointmentStatus completedStatus);
 
     @Query("""
             SELECT CASE WHEN COUNT(a) > 0 THEN true ELSE false END
@@ -58,6 +83,18 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
             """)
     List<DoctorAppointmentCount> countAppointmentsByDoctor();
 
+    @Query("""
+            SELECT o.name AS officeName,
+                   o.officeNumber AS officeNumber,
+                   COUNT(a) AS appointmentCount
+            FROM Appointment a
+            JOIN a.doctor d
+            JOIN d.office o
+            GROUP BY o.id, o.name, o.officeNumber
+            ORDER BY COUNT(a) DESC, o.officeNumber ASC
+            """)
+    List<BusiestOffice> findOfficesByAppointmentCount();
+
     List<Appointment> findDistinctByDoctor_Specializations_Id(UUID specializationId);
 
     Page<Appointment> findByDoctor_IdOrderByAppointmentDateAsc(UUID doctorId, Pageable pageable);
@@ -74,6 +111,14 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
         UUID getDoctorId();
 
         String getDoctorName();
+
+        Long getAppointmentCount();
+    }
+
+    interface BusiestOffice {
+        String getOfficeName();
+
+        Integer getOfficeNumber();
 
         Long getAppointmentCount();
     }

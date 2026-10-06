@@ -121,6 +121,186 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "B1 Cardiology",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8082/api/doctors/by-specialization?name=cardiology",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "doctors",
+            "by-specialization"
+          ],
+          "query": [
+            {
+              "key": "name",
+              "value": "cardiology"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "B2 Doctor without Office",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8082/api/doctors/without-office",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "doctors",
+            "without-office"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "B3 Specialization not used",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8082/api/specializations/unused",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "specializations",
+            "unused"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "B4 Patients of a doctor",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8082/api/patients/of-doctor/6826b5a0-28d3-4629-a38f-ffb0e954d536",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "patients",
+            "of-doctor",
+            "6826b5a0-28d3-4629-a38f-ffb0e954d536"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "C1 Appointment per status",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8082/api/appointments/stats/by-status",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "appointments",
+            "stats",
+            "by-status"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "C2 Frequent patients",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8082/api/patients/frequent?min=3",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "patients",
+            "frequent"
+          ],
+          "query": [
+            {
+              "key": "min",
+              "value": "3"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "C4 Doctor is absent",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8082/api/appointments/cancel-day?doctorId=6826b5a0-28d3-4629-a38f-ffb0e954d536&date=2026-10-20",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "appointments",
+            "cancel-day"
+          ],
+          "query": [
+            {
+              "key": "doctorId",
+              "value": "6826b5a0-28d3-4629-a38f-ffb0e954d536"
+            },
+            {
+              "key": "date",
+              "value": "2026-10-20"
+            }
+          ]
+        }
+      },
+      "response": []
     }
   ]
 }

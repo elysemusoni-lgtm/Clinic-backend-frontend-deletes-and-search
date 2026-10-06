@@ -30,6 +30,11 @@ public class PatientController {
         return patientService.getAllPatients();
     }
 
+    @GetMapping("/frequent")
+    public List<Patient> getFrequentPatients(@RequestParam int min) {
+        return patientService.getFrequentPatients(min);
+    }
+
     @GetMapping("/of-doctor/{doctorId}")
     public List<Patient> getPatientsOfDoctor(@PathVariable UUID doctorId) {
         return patientService.getPatientsOfDoctor(doctorId);

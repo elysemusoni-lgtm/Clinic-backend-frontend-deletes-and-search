@@ -33,6 +33,19 @@ public class AppointmentController {
         return appointmentService.getAppointmentsByStatus(status);
     }
 
+    @PatchMapping("/cancel-day")
+    public String cancelAppointmentsForDoctorAndDate(
+            @RequestParam UUID doctorId,
+            @RequestParam LocalDate date) {
+        int cancelledCount = appointmentService.cancelDoctorAppointmentsForDate(doctorId, date);
+        return cancelledCount + " appointments cancelled";
+    }
+
+    @GetMapping("/stats/by-status")
+    public List<Object[]> getAppointmentCountsByStatus() {
+        return appointmentService.getAppointmentCountsByStatus();
+    }
+
     @GetMapping("/between")
     public List<Appointment> getAppointmentsBetween(
             @RequestParam LocalDate start,

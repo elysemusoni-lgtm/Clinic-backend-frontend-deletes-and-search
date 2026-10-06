@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import kigali.clinic.rw.domain.Office;
@@ -26,6 +27,13 @@ public class OfficeController {
     @GetMapping
     public List<Office> getAllOffices() {
         return officeService.getAllOffices();
+    }
+
+    @GetMapping("/busiest")
+    public ResponseEntity<?> getBusiestOffice() {
+        return officeService.getBusiestOffice()
+                .<ResponseEntity<?>>map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.ok("No appointments yet"));
     }
 
     @GetMapping("/by-name/starting-with")

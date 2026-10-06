@@ -71,6 +71,19 @@ public class AppointmentService {
         return appointmentRepository.findByStatusOrderByAppointmentDateAsc(status);
     }
 
+    @Transactional
+    public int cancelDoctorAppointmentsForDate(UUID doctorId, LocalDate date) {
+        return appointmentRepository.cancelDoctorAppointmentsForDate(
+                doctorId,
+                Date.valueOf(date),
+                AppointmentStatus.CANCELLED,
+                AppointmentStatus.COMPLETED);
+    }
+
+    public List<Object[]> getAppointmentCountsByStatus() {
+        return appointmentRepository.countAppointmentsByStatus();
+    }
+
     public List<Appointment> getAppointmentsBetween(LocalDate start, LocalDate end) {
         return appointmentRepository.findByAppointmentDateBetweenOrderByAppointmentDateAsc(
                 Date.valueOf(start), Date.valueOf(end));

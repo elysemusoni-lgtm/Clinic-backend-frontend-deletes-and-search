@@ -1,12 +1,15 @@
 package kigali.clinic.rw.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import kigali.clinic.rw.domain.Office;
+import kigali.clinic.rw.repository.AppointmentRepository;
+import kigali.clinic.rw.repository.AppointmentRepository.BusiestOffice;
 import kigali.clinic.rw.repository.OfficeRepository;
 
 @Service
@@ -14,6 +17,9 @@ public class OfficeService {
 
     @Autowired
     private OfficeRepository officeRepository;
+
+    @Autowired
+    private AppointmentRepository appointmentRepository;
 
     
     public Office createOffice(Office office) {
@@ -23,6 +29,10 @@ public class OfficeService {
     
     public List<Office> getAllOffices() {
         return officeRepository.findAll();
+    }
+
+    public Optional<BusiestOffice> getBusiestOffice() {
+        return appointmentRepository.findOfficesByAppointmentCount().stream().findFirst();
     }
 
     public List<Office> findOfficesByNameStartingWith(String prefix) {
