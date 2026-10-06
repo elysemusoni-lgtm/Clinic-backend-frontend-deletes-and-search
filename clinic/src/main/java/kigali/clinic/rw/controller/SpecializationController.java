@@ -26,6 +26,11 @@ public class SpecializationController {
         return specializationService.getAllSpecializations();
     }
 
+    @GetMapping("/unused")
+    public List<Specialization> getUnusedSpecializations() {
+        return specializationService.getUnusedSpecializations();
+    }
+
     @GetMapping("/{id}")
     public Specialization getSpecializationById(@PathVariable UUID id) {
         return specializationService.getSpecializationById(id);

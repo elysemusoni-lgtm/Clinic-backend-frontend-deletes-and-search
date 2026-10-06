@@ -28,6 +28,11 @@ public class DoctorController {
         return doctorService.getAllDoctors();
     }
 
+    @GetMapping("/without-office")
+    public List<Doctor> getDoctorsWithoutOffice() {
+        return doctorService.getDoctorsWithoutOffice();
+    }
+
     @GetMapping("/by-last-name")
     public List<Doctor> findDoctorsByLastName(@RequestParam String lastName) {
         return doctorService.findDoctorsByLastName(lastName);

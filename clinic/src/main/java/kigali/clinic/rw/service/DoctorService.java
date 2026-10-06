@@ -41,6 +41,10 @@ public class DoctorService {
         return doctorRepository.findAll();
     }
 
+    public List<Doctor> getDoctorsWithoutOffice() {
+        return doctorRepository.findByOfficeIsNullOrderByLastNameAsc();
+    }
+
     public List<Doctor> findDoctorsByLastName(String lastName) {
         return doctorRepository.findByLastNameIgnoreCaseOrderByFirstNameAsc(lastName);
     }

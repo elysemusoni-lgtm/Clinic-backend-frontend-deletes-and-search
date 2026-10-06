@@ -4,9 +4,12 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import kigali.clinic.rw.domain.Patient;
+import kigali.clinic.rw.repository.DoctorRepository;
 import kigali.clinic.rw.repository.PatientRepository;
 
 @Service
@@ -14,6 +17,9 @@ public class PatientService {
 
     @Autowired
     private PatientRepository patientRepository;
+
+    @Autowired
+    private DoctorRepository doctorRepository;
 
     
     public Patient createPatient(Patient patient) {
@@ -23,6 +29,14 @@ public class PatientService {
     
     public List<Patient> getAllPatients() {
         return patientRepository.findAll();
+    }
+
+    public List<Patient> getPatientsOfDoctor(UUID doctorId) {
+        if (!doctorRepository.existsById(doctorId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "The doctor with that id does not exist");
+        }
+        return patientRepository.findDistinctByAppointmentDoctorId(doctorId);
     }
 
     public List<Patient> findPatientsByLastName(String lastName) {

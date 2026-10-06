@@ -33,6 +33,10 @@ public class SpecializationService {
         return specializationRepository.findAll();
     }
 
+    public List<Specialization> getUnusedSpecializations() {
+        return specializationRepository.findUnusedSpecializations();
+    }
+
     public Specialization getSpecializationById(UUID id) {
         return specializationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Specialization not found with id: " + id));

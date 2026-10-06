@@ -13,4 +13,6 @@ public interface DoctorRepository extends JpaRepository<Doctor, UUID> {
     List<Doctor> findByFirstNameIgnoreCaseOrderByLastNameAsc(String firstName);
 
     List<Doctor> findDistinctBySpecializations_NameIgnoreCaseOrderByLastNameAscFirstNameAsc(String name);
+
+    List<Doctor> findByOfficeIsNullOrderByLastNameAsc();
 }

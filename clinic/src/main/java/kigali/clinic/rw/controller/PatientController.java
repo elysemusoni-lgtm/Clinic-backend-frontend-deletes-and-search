@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import kigali.clinic.rw.domain.Patient;
 import kigali.clinic.rw.service.PatientService;
@@ -26,6 +28,16 @@ public class PatientController {
     @GetMapping
     public List<Patient> getAllPatients() {
         return patientService.getAllPatients();
+    }
+
+    @GetMapping("/of-doctor/{doctorId}")
+    public List<Patient> getPatientsOfDoctor(@PathVariable UUID doctorId) {
+        return patientService.getPatientsOfDoctor(doctorId);
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<String> handlePatientStatusException(ResponseStatusException exception) {
+        return ResponseEntity.status(exception.getStatusCode()).body(exception.getReason());
     }
 
     @GetMapping("/by-last-name")
