@@ -1,0 +1,124 @@
+{
+  "info": {
+    "_postman_id": "675bf700-671f-4093-890e-2d8b56394c8f",
+    "name": "Clinic_Quiz2",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58561491",
+    "_collection_link": "https://go.postman.co/collection/58561491-675bf700-671f-4093-890e-2d8b56394c8f?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "A1 Add Specialization",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"appointmentDate\": \"2026-10-23\",\r\n  \"reason\": \"General checkup\",\r\n  \"status\": \"COMPLETED\",\r\n  \"patient\": {\r\n    \"id\": \"cc5a6a1c-749f-41b3-8212-781b4a60af1e\"\r\n  },\r\n  \"doctor\": {\r\n    \"id\": \"6826b5a0-28d3-4629-a38f-ffb0e954d536\"\r\n  }\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8082/api/doctors/479ff65d-97cb-4a2b-add7-63ce87b20bfe/specializations/8a04668e-69cc-47d5-9aab-b6660074c237",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "doctors",
+            "479ff65d-97cb-4a2b-add7-63ce87b20bfe",
+            "specializations",
+            "8a04668e-69cc-47d5-9aab-b6660074c237"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "A2 Remove One Specialization",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8082/api/doctors/479ff65d-97cb-4a2b-add7-63ce87b20bfe/specializations/8a04668e-69cc-47d5-9aab-b6660074c237",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "doctors",
+            "479ff65d-97cb-4a2b-add7-63ce87b20bfe",
+            "specializations",
+            "8a04668e-69cc-47d5-9aab-b6660074c237"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "A3 Free Offices",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8082/api/offices/free",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "offices",
+            "free"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "A4 Move Office",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8082/api/doctors/f50973c7-5e29-4d3c-8672-757c5b28ac40/office?officeNumber=104",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "doctors",
+            "f50973c7-5e29-4d3c-8672-757c5b28ac40",
+            "office"
+          ],
+          "query": [
+            {
+              "key": "officeNumber",
+              "value": "104"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
