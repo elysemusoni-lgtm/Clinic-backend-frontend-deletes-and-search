@@ -121,12 +121,279 @@
       "response": []
     },
     {
-      "name": "Doctor Agenda for Date",
+      "name": "B1 Safe Booking",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"appointmentDate\": \"2024-10-23\",\r\n  \"reason\": \"General checkup\",\r\n  \"status\": \"COMPLETED\",\r\n  \"patient\": {\r\n    \"id\": \"b4ff9943-cbc0-42ef-811b-c9d924c6205f\"\r\n  },\r\n  \"doctor\": {\r\n    \"id\": \"479ff65d-97cb-4a2b-add7-63ce87b20bfe\"\r\n  }\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8082/api/appointments/save",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "appointments",
+            "save"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "B2 Status Flow",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8082/api/appointments/130dfa77-bae6-4098-b531-f511dc494beb/status?status=CONFIRMED",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "appointments",
+            "130dfa77-bae6-4098-b531-f511dc494beb",
+            "status"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "CONFIRMED"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "B3 Reschedule appointment",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8082/api/appointments/349bc3bc-26f1-44c9-b1e9-fb8150510144/reschedule?newDate=2026-10-30",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "appointments",
+            "349bc3bc-26f1-44c9-b1e9-fb8150510144",
+            "reschedule"
+          ],
+          "query": [
+            {
+              "key": "newDate",
+              "value": "2026-10-30"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "C1 Write Prescription",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"medicineName\": \"Glucose\",\r\n  \"dosage\": \"1 tablet, 2 times a day\",\r\n  \"durationDays\": 7\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8082/api/prescriptions/save?appointmentId=2c42cb87-03da-4e5f-aae4-561a70e4d2c6",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "prescriptions",
+            "save"
+          ],
+          "query": [
+            {
+              "key": "appointmentId",
+              "value": "2c42cb87-03da-4e5f-aae4-561a70e4d2c6"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "C2 Prescription of an appointment",
       "request": {
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:8082/api/doctors/{{doctorId}}/agenda?date=2026-10-20",
+          "raw": "http://localhost:8082/api/prescriptions/appointment/349bc3bc-26f1-44c9-b1e9-fb8150510144",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "prescriptions",
+            "appointment",
+            "349bc3bc-26f1-44c9-b1e9-fb8150510144"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "C3 prescription history",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8082/api/prescriptions/patient/1002",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "prescriptions",
+            "patient",
+            "1002"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "C4 Update",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"medicineName\": \"Amoxicillin\",\r\n  \"dosage\": \"1 tablet, 2 times a day\",\r\n  \"durationDays\": 5\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8082/api/prescriptions/update/a9d7a267-8251-42c4-9384-52ba2feddb0a",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "prescriptions",
+            "update",
+            "a9d7a267-8251-42c4-9384-52ba2feddb0a"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "C4 Delete",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8082/api/prescriptions/delete/67ef956a-6fba-4a98-9d94-41f1a1658428",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "prescriptions",
+            "delete",
+            "67ef956a-6fba-4a98-9d94-41f1a1658428"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "C4 Protect",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8082/api/appointments/130dfa77-bae6-4098-b531-f511dc494beb",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "appointments",
+            "130dfa77-bae6-4098-b531-f511dc494beb"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "D1 Doctors agenda for a day",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8082/api/doctors/a15d9523-2092-4ec3-9a5d-d6efd6c7893d/agenda?date=2026-10-20",
           "protocol": "http",
           "host": [
             "localhost"
@@ -135,7 +402,7 @@
           "path": [
             "api",
             "doctors",
-            "{{doctorId}}",
+            "a15d9523-2092-4ec3-9a5d-d6efd6c7893d",
             "agenda"
           ],
           "query": [
@@ -149,12 +416,34 @@
       "response": []
     },
     {
-      "name": "Search Doctors by Name",
+      "name": "D2 Upcoming appointments",
       "request": {
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:8082/api/doctors/search?name=gis",
+          "raw": "http://localhost:8082/api/patients/1002/upcoming",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "patients",
+            "1002",
+            "upcoming"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "D3 Search doctor by name",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8082/api/doctors/search?name=allen",
           "protocol": "http",
           "host": [
             "localhost"
@@ -168,7 +457,7 @@
           "query": [
             {
               "key": "name",
-              "value": "gis"
+              "value": "allen"
             }
           ]
         }
@@ -176,7 +465,50 @@
       "response": []
     },
     {
-      "name": "Doctor Workload",
+      "name": "D4 Clinic Dashboard",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8082/api/dashboard/summary",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "dashboard",
+            "summary"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "BONUS 1",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8082/api/prescriptions/stats/top-medicines",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "prescriptions",
+            "stats",
+            "top-medicines"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "BONUS 2",
       "request": {
         "method": "GET",
         "header": [],
@@ -201,289 +533,6 @@
               "key": "end",
               "value": "2026-10-31"
             }
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Reschedule Appointment",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Appointment is rescheduled', function () {",
-              "  pm.response.to.have.status(200);",
-              "  pm.expect(pm.response.text()).to.eql('Appointment rescheduled successfully');",
-              "});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "PATCH",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8082/api/appointments/{{appointmentId}}/reschedule?newDate=2026-10-30",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8082",
-          "path": [
-            "api",
-            "appointments",
-            "{{appointmentId}}",
-            "reschedule"
-          ],
-          "query": [
-            {
-              "key": "newDate",
-              "value": "2026-10-30"
-            }
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Create Prescription",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Prescription saved', function () {",
-              "  pm.response.to.have.status(201);",
-              "  pm.expect(pm.response.text()).to.eql('Prescription saved successfully');",
-              "});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"medicineName\": \"Amoxicillin\",\n  \"dosage\": \"1 tablet, 3 times a day\",\n  \"durationDays\": 7\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8082/api/prescriptions/save?appointmentId={{appointmentId}}",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8082",
-          "path": [
-            "api",
-            "prescriptions",
-            "save"
-          ],
-          "query": [
-            {
-              "key": "appointmentId",
-              "value": "{{appointmentId}}"
-            }
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Get Prescriptions",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8082/api/prescriptions",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8082",
-          "path": [
-            "api",
-            "prescriptions"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Most Prescribed Medicines",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8082/api/prescriptions/stats/top-medicines",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8082",
-          "path": [
-            "api",
-            "prescriptions",
-            "stats",
-            "top-medicines"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Prescription History by Patient SS Number",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8082/api/prescriptions/patient/YOUR_SS_NUMBER",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8082",
-          "path": [
-            "api",
-            "prescriptions",
-            "patient",
-            "YOUR_SS_NUMBER"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Update Prescription",
-      "request": {
-        "method": "PUT",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"medicineName\": \"Amoxicillin\",\n  \"dosage\": \"1 tablet, 2 times a day\",\n  \"durationDays\": 5\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8082/api/prescriptions/update/{{prescriptionId}}",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8082",
-          "path": [
-            "api",
-            "prescriptions",
-            "update",
-            "{{prescriptionId}}"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Delete Prescription",
-      "request": {
-        "method": "DELETE",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8082/api/prescriptions/delete/{{prescriptionId}}",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8082",
-          "path": [
-            "api",
-            "prescriptions",
-            "delete",
-            "{{prescriptionId}}"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Delete Appointment",
-      "request": {
-        "method": "DELETE",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8082/api/appointments/{{appointmentId}}",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8082",
-          "path": [
-            "api",
-            "appointments",
-            "{{appointmentId}}"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Upcoming Appointments by Patient SS Number",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8082/api/patients/{{ssNumber}}/upcoming",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8082",
-          "path": [
-            "api",
-            "patients",
-            "{{ssNumber}}",
-            "upcoming"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Clinic Dashboard Summary",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8082/api/dashboard/summary",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8082",
-          "path": [
-            "api",
-            "dashboard",
-            "summary"
           ]
         }
       },
