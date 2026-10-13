@@ -15,4 +15,6 @@ public interface DoctorRepository extends JpaRepository<Doctor, UUID> {
     List<Doctor> findDistinctBySpecializations_NameIgnoreCaseOrderByLastNameAscFirstNameAsc(String name);
 
     List<Doctor> findByOfficeIsNullOrderByLastNameAsc();
+
+    boolean existsByOffice_OfficeNumberAndIdNot(int officeNumber, UUID doctorId);
 }

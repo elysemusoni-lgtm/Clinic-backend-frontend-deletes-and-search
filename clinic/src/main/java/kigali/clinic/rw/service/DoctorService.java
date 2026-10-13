@@ -78,12 +78,77 @@ public class DoctorService {
     }
 
     @Transactional
+    public String addSpecialization(UUID doctorId, UUID specializationId) {
+        Doctor doctor = doctorRepository.findById(doctorId).orElse(null);
+        if (doctor == null) {
+            return "The doctor with that id does not exist";
+        }
+        Specialization specialization = specializationRepository.findById(specializationId).orElse(null);
+        if (specialization == null) {
+            return "That specialization does not exist";
+        }
+
+        if (doctor.getSpecializations().contains(specialization)) {
+            return "The doctor already has that specialization";
+        }
+
+        doctor.getSpecializations().add(specialization);
+        specialization.getDoctors().add(doctor);
+        doctorRepository.save(doctor);
+        return "Specialization added to the doctor";
+    }
+
+    @Transactional
+    public String removeSpecialization(UUID doctorId, UUID specializationId) {
+        Doctor doctor = doctorRepository.findById(doctorId).orElse(null);
+        if (doctor == null) {
+            return "The doctor with that id does not exist";
+        }
+        Specialization specialization = specializationRepository.findById(specializationId).orElse(null);
+        if (specialization == null) {
+            return "That specialization does not exist";
+        }
+
+        boolean removed = doctor.getSpecializations().removeIf(
+                existing -> existing.getId().equals(specializationId));
+        if (!removed) {
+            return "The doctor does not have that specialization";
+        }
+
+        specialization.getDoctors().removeIf(
+                existing -> existing.getId().equals(doctorId));
+        doctorRepository.save(doctor);
+        return "Specialization removed from the doctor";
+    }
+
+    @Transactional
+    public String moveDoctorToOffice(UUID doctorId, int officeNumber) {
+        Doctor doctor = doctorRepository.findById(doctorId).orElse(null);
+        if (doctor == null) {
+            return "The doctor with that id does not exist";
+        }
+        Office office = officeRepository.findByOfficeNumber(officeNumber).orElse(null);
+        if (office == null) {
+            return "The office with that office number does not exist";
+        }
+
+        if (doctorRepository.existsByOffice_OfficeNumberAndIdNot(officeNumber, doctorId)) {
+            return "That office is taken by other doctor";
+        }
+
+        doctor.setOffice(office);
+        doctorRepository.save(doctor);
+        return "Office changed successfully";
+    }
+
+    @Transactional
     public void deleteDoctor(UUID id) {
         Doctor doctor = getDoctorById(id);
         for (Specialization specialization : doctor.getSpecializations()) {
             specialization.getDoctors().removeIf(linkedDoctor -> linkedDoctor.getId().equals(id));
-            specializationRepository.save(specialization);
         }
+        doctor.getSpecializations().clear();
+        doctorRepository.save(doctor);
         doctorRepository.deleteById(id);
     }
 
@@ -123,16 +188,15 @@ public class DoctorService {
         for (Specialization specialization : doctor.getSpecializations()) {
             if (!specializationIds.contains(specialization.getId())) {
                 specialization.getDoctors().removeIf(linkedDoctor -> linkedDoctor.getId().equals(doctor.getId()));
-                specializationRepository.save(specialization);
             }
         }
         for (Specialization specialization : selected) {
             if (specialization.getDoctors().stream()
                     .noneMatch(linkedDoctor -> linkedDoctor.getId().equals(doctor.getId()))) {
                 specialization.getDoctors().add(doctor);
-                specializationRepository.save(specialization);
             }
         }
         doctor.setSpecializations(selected);
+        doctorRepository.save(doctor);
     }
 }
