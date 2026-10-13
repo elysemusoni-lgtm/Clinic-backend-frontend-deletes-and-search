@@ -49,4 +49,9 @@ public class PrescriptionController {
             return ResponseEntity.ok(prescriptions.get());
         }
     }
+
+    @GetMapping("/patient/{ssNumber}")
+    public List<Prescription> getPrescriptionsForPatient(@PathVariable String ssNumber) {
+        return prescriptionService.getPrescriptionsForPatient(ssNumber);
+    }
 }
