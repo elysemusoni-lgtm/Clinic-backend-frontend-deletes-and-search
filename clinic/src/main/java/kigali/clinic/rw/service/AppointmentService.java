@@ -77,7 +77,7 @@ public class AppointmentService {
     public String updateAppointmentStatus(UUID appointmentId, AppointmentStatus newStatus) {
         Appointment appointment = appointmentRepository.findById(appointmentId).orElse(null);
         if (appointment == null) {
-            return "Appointment not found";
+            return "The appointment with that id does not exist";
         }
 
         AppointmentStatus currentStatus = appointment.getStatus();

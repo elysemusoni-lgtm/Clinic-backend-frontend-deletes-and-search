@@ -48,7 +48,7 @@ public class AppointmentController {
         String message = appointmentService.updateAppointmentStatus(appointmentId, status);
         if (message.startsWith("Cannot change status from ")) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
-        } else if (message.equals("Appointment not found")) {
+        } else if (message.equals("The appointment with that id does not exist")) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
         } else {
             return ResponseEntity.ok(message);
