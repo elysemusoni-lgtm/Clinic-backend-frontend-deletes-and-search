@@ -39,13 +39,14 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
             SET a.status = :cancelledStatus
             WHERE a.doctor.id = :doctorId
               AND a.appointmentDate = :appointmentDate
-              AND (a.status IS NULL OR a.status <> :completedStatus)
+              AND a.status IN (:scheduledStatus, :confirmedStatus)
             """)
     int cancelDoctorAppointmentsForDate(
             @Param("doctorId") UUID doctorId,
             @Param("appointmentDate") java.sql.Date appointmentDate,
-            @Param("cancelledStatus") AppointmentStatus cancelledStatus,
-            @Param("completedStatus") AppointmentStatus completedStatus);
+            @Param("scheduledStatus") AppointmentStatus scheduledStatus,
+            @Param("confirmedStatus") AppointmentStatus confirmedStatus,
+            @Param("cancelledStatus") AppointmentStatus cancelledStatus);
 
     @Query("""
             SELECT CASE WHEN COUNT(a) > 0 THEN true ELSE false END

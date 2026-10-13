@@ -108,8 +108,9 @@ public class AppointmentService {
         return appointmentRepository.cancelDoctorAppointmentsForDate(
                 doctorId,
                 Date.valueOf(date),
-                AppointmentStatus.CANCELLED,
-                AppointmentStatus.COMPLETED);
+                AppointmentStatus.SCHEDULED,
+                AppointmentStatus.CONFIRMED,
+                AppointmentStatus.CANCELLED);
     }
 
     public List<Object[]> getAppointmentCountsByStatus() {
