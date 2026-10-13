@@ -16,6 +16,10 @@ import kigali.clinic.rw.domain.AppointmentStatus;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, UUID> {
 
+    long countByAppointmentDate(java.sql.Date appointmentDate);
+
+    long countByStatus(AppointmentStatus status);
+
     List<Appointment> findByDoctor_IdAndStatusOrderByAppointmentDateAsc(
             UUID doctorId, AppointmentStatus status);
 
