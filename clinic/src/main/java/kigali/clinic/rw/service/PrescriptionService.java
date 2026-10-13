@@ -1,6 +1,7 @@
 package kigali.clinic.rw.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +23,17 @@ public class PrescriptionService {
     private AppointmentRepository appointmentRepository;
 
     @Transactional
-    public Prescription createPrescription(Prescription prescription) {
+    public Optional<Prescription> createPrescription(Prescription prescription) {
         if (prescription.getAppointment() == null || prescription.getAppointment().getId() == null) {
-            throw new IllegalArgumentException("An existing appointment id is required");
+            return Optional.empty();
         }
         UUID appointmentId = prescription.getAppointment().getId();
-        Appointment appointment = appointmentRepository.findById(appointmentId)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Appointment not found with id: " + appointmentId));
-        prescription.setAppointment(appointment);
-        return prescriptionRepository.save(prescription);
+        Optional<Appointment> appointment = appointmentRepository.findById(appointmentId);
+        if (appointment.isEmpty()) {
+            return Optional.empty();
+        }
+        prescription.setAppointment(appointment.get());
+        return Optional.of(prescriptionRepository.save(prescription));
     }
 
     public List<Prescription> getAllPrescriptions() {
