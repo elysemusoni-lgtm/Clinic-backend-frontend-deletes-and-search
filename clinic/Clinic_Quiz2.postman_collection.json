@@ -164,6 +164,20 @@
     },
     {
       "name": "Create Prescription",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Prescription saved', function () {",
+              "  pm.response.to.have.status(201);",
+              "  pm.expect(pm.response.text()).to.eql('Prescription saved successfully');",
+              "});"
+            ]
+          }
+        }
+      ],
       "request": {
         "method": "POST",
         "header": [
@@ -174,7 +188,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"medicineName\": \"Amoxicillin\",\n  \"dosage\": \"1 tablet, 3 times a day\",\n  \"durationDays\": 7,\n  \"issuedDate\": \"2026-10-13\",\n  \"appointment\": {\n    \"id\": \"{{appointmentId}}\"\n  }\n}",
+          "raw": "{\n  \"medicineName\": \"Amoxicillin\",\n  \"dosage\": \"1 tablet, 3 times a day\",\n  \"durationDays\": 7\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -182,7 +196,7 @@
           }
         },
         "url": {
-          "raw": "http://localhost:8082/api/prescriptions",
+          "raw": "http://localhost:8082/api/prescriptions/save?appointmentId={{appointmentId}}",
           "protocol": "http",
           "host": [
             "localhost"
@@ -190,7 +204,14 @@
           "port": "8082",
           "path": [
             "api",
-            "prescriptions"
+            "prescriptions",
+            "save"
+          ],
+          "query": [
+            {
+              "key": "appointmentId",
+              "value": "{{appointmentId}}"
+            }
           ]
         }
       },

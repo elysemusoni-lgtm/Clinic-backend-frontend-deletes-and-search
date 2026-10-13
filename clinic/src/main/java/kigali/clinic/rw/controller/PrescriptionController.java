@@ -1,7 +1,6 @@
 package kigali.clinic.rw.controller;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,19 +18,17 @@ public class PrescriptionController {
     @Autowired
     private PrescriptionService prescriptionService;
 
-    @PostMapping
-    public ResponseEntity<?> createPrescription(@RequestBody Prescription prescription) {
-        if (prescription.getAppointment() == null || prescription.getAppointment().getId() == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("An existing appointment id is required");
+    @PostMapping("/save")
+    public ResponseEntity<String> createPrescription(
+            @RequestParam UUID appointmentId,
+            @RequestBody Prescription prescription) {
+        String message = prescriptionService.createPrescription(prescription, appointmentId);
+        if (message.equals("The appointment with that id does not exist")) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+        } else if (message.equals("Prescriptions are only for COMPLETED appointments")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         } else {
-            Optional<Prescription> savedPrescription = prescriptionService.createPrescription(prescription);
-            if (savedPrescription.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("The appointment with that id does not exist");
-            } else {
-                return ResponseEntity.ok(savedPrescription.get());
-            }
+            return ResponseEntity.status(HttpStatus.CREATED).body(message);
         }
     }
 
