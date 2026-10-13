@@ -94,6 +94,32 @@ public class AppointmentService {
         return "Appointment status updated successfully";
     }
 
+    @Transactional
+    public String rescheduleAppointment(UUID appointmentId, LocalDate newDate) {
+        Appointment appointment = appointmentRepository.findById(appointmentId).orElse(null);
+        if (appointment == null) {
+            return "The appointment with that id does not exist";
+        }
+        if (appointment.getStatus() == AppointmentStatus.COMPLETED) {
+            return "A COMPLETED appointment cannot be rescheduled";
+        } else if (appointment.getStatus() == AppointmentStatus.CANCELLED) {
+            return "A CANCELLED appointment cannot be rescheduled";
+        } else if (newDate.isBefore(LocalDate.now())) {
+            return "Appointment date cannot be in the past";
+        } else if (appointmentRepository.existsByDoctor_IdAndAppointmentDateAndStatusNotAndIdNot(
+                appointment.getDoctor().getId(),
+                Date.valueOf(newDate),
+                AppointmentStatus.CANCELLED,
+                appointmentId)) {
+            return "Doctor is already booked on that date";
+        } else {
+            appointment.setAppointmentDate(Date.valueOf(newDate));
+            appointment.setStatus(AppointmentStatus.SCHEDULED);
+            appointmentRepository.save(appointment);
+            return "Appointment rescheduled successfully";
+        }
+    }
+
     public List<Appointment> getScheduledAppointmentsForDoctor(UUID doctorId) {
         return appointmentRepository.findByDoctor_IdAndStatusOrderByAppointmentDateAsc(
                 doctorId, AppointmentStatus.SCHEDULED);

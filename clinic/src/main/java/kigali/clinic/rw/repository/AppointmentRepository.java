@@ -32,6 +32,12 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
     List<Appointment> findByAppointmentDateBetweenOrderByAppointmentDateAsc(
             java.sql.Date start, java.sql.Date end);
 
+    boolean existsByDoctor_IdAndAppointmentDateAndStatusNotAndIdNot(
+            UUID doctorId,
+            java.sql.Date appointmentDate,
+            AppointmentStatus status,
+            UUID appointmentId);
+
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Transactional
     @Query("""
