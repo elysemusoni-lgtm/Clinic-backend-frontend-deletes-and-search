@@ -8,10 +8,8 @@ import java.sql.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import kigali.clinic.rw.domain.Appointment;
 import kigali.clinic.rw.domain.AppointmentStatus;
@@ -37,29 +35,42 @@ public class AppointmentService {
 
     @Transactional
     public Appointment createAppointment(Appointment appointment) {
-        if (appointment.getPatient() == null || appointment.getPatient().getId() == null) {
-            throw new IllegalArgumentException("An existing patient id is required");
-        }
-        if (appointment.getDoctor() == null || appointment.getDoctor().getId() == null) {
-            throw new IllegalArgumentException("An existing doctor id is required");
-        }
-
         UUID patientId = appointment.getPatient().getId();
         UUID doctorId = appointment.getDoctor().getId();
-        Patient patient = patientRepository.findById(patientId)
-                .orElseThrow(() -> new IllegalArgumentException("Patient not found with id: " + patientId));
-        Doctor doctor = doctorRepository.findById(doctorId)
-                .orElseThrow(() -> new IllegalArgumentException("Doctor not found with id: " + doctorId));
-
-        if (appointmentRepository.existsActiveAppointmentForDoctorOnDate(
-                doctorId, appointment.getAppointmentDate(), AppointmentStatus.CANCELLED)) {
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT, "Doctor already booked");
-        }
-
+        Patient patient = patientRepository.findById(patientId).orElseThrow();
+        Doctor doctor = doctorRepository.findById(doctorId).orElseThrow();
         appointment.setPatient(patient);
         appointment.setDoctor(doctor);
+        appointment.setStatus(AppointmentStatus.SCHEDULED);
         return appointmentRepository.save(appointment);
+    }
+
+    public String validateAppointment(Appointment appointment) {
+        if (appointment.getAppointmentDate() == null) {
+            return "Appointment date is required";
+        }
+        if (appointment.getAppointmentDate().toLocalDate().isBefore(LocalDate.now())) {
+            return "Appointment date cannot be in the past";
+        }
+        if (appointment.getPatient() == null || appointment.getPatient().getId() == null) {
+            return "An existing patient id is required";
+        }
+        if (appointment.getDoctor() == null || appointment.getDoctor().getId() == null) {
+            return "An existing doctor id is required";
+        }
+        UUID patientId = appointment.getPatient().getId();
+        if (!patientRepository.existsById(patientId)) {
+            return "Patient not found with id: " + patientId;
+        }
+        UUID doctorId = appointment.getDoctor().getId();
+        if (!doctorRepository.existsById(doctorId)) {
+            return "Doctor not found with id: " + doctorId;
+        }
+        if (appointmentRepository.existsActiveAppointmentForDoctorOnDate(
+                doctorId, appointment.getAppointmentDate(), AppointmentStatus.CANCELLED)) {
+            return "Doctor already booked";
+        }
+        return "";
     }
 
     public List<Appointment> getScheduledAppointmentsForDoctor(UUID doctorId) {

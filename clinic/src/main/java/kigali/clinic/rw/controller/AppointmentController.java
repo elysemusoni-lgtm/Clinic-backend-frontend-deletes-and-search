@@ -7,8 +7,8 @@ import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import kigali.clinic.rw.domain.Appointment;
 import kigali.clinic.rw.domain.AppointmentStatus;
@@ -24,8 +24,21 @@ public class AppointmentController {
     private AppointmentService appointmentService;
 
     @PostMapping("/save")
-    public Appointment createAppointment(@RequestBody Appointment appointment) {
-        return appointmentService.createAppointment(appointment);
+    public ResponseEntity<?> createAppointment(@RequestBody Appointment appointment) {
+        String message = appointmentService.validateAppointment(appointment);
+        if (message.equals("Appointment date cannot be in the past")
+                || message.equals("Appointment date is required")
+                || message.equals("An existing patient id is required")
+                || message.equals("An existing doctor id is required")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+        } else if (message.startsWith("Patient not found with id:")
+                || message.startsWith("Doctor not found with id:")) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+        } else if (message.equals("Doctor already booked")) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(message);
+        } else {
+            return ResponseEntity.ok(appointmentService.createAppointment(appointment));
+        }
     }
 
     @GetMapping("/by-status")
@@ -47,13 +60,15 @@ public class AppointmentController {
     }
 
     @GetMapping("/between")
-    public List<Appointment> getAppointmentsBetween(
+    public ResponseEntity<?> getAppointmentsBetween(
             @RequestParam LocalDate start,
             @RequestParam LocalDate end) {
         if (start.isAfter(end)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "start must be on or before end");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("start must be on or before end");
+        } else {
+            return ResponseEntity.ok(appointmentService.getAppointmentsBetween(start, end));
         }
-        return appointmentService.getAppointmentsBetween(start, end);
     }
 
     @GetMapping("/doctors/{doctorId}/scheduled")
