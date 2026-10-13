@@ -2,15 +2,21 @@ package kigali.clinic.rw.service;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.UUID;
+import java.sql.Date;
+import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kigali.clinic.rw.domain.Doctor;
+import kigali.clinic.rw.domain.Appointment;
+import kigali.clinic.rw.domain.AppointmentStatus;
 import kigali.clinic.rw.domain.Office;
 import kigali.clinic.rw.domain.Specialization;
+import kigali.clinic.rw.repository.AppointmentRepository;
 import kigali.clinic.rw.repository.DoctorRepository;
 import kigali.clinic.rw.repository.OfficeRepository;
 import kigali.clinic.rw.repository.SpecializationRepository;
@@ -27,6 +33,9 @@ public class DoctorService {
     @Autowired
     private OfficeRepository officeRepository;
 
+    @Autowired
+    private AppointmentRepository appointmentRepository;
+
     @Transactional
     public Doctor createDoctor(Doctor doctor) {
         List<UUID> specializationIds = getSpecializationIds(doctor.getSpecializations());
@@ -39,6 +48,16 @@ public class DoctorService {
 
     public List<Doctor> getAllDoctors() {
         return doctorRepository.findAll();
+    }
+
+    public Optional<List<Appointment>> getDoctorAgenda(UUID doctorId, LocalDate date) {
+        if (!doctorRepository.existsById(doctorId)) {
+            return Optional.empty();
+        } else {
+            return Optional.of(appointmentRepository
+                    .findByDoctor_IdAndAppointmentDateAndStatusNot(
+                            doctorId, Date.valueOf(date), AppointmentStatus.CANCELLED));
+        }
     }
 
     public List<Doctor> getDoctorsWithoutOffice() {

@@ -121,6 +121,34 @@
       "response": []
     },
     {
+      "name": "Doctor Agenda for Date",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8082/api/doctors/{{doctorId}}/agenda?date=2026-10-20",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "doctors",
+            "{{doctorId}}",
+            "agenda"
+          ],
+          "query": [
+            {
+              "key": "date",
+              "value": "2026-10-20"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
       "name": "Reschedule Appointment",
       "event": [
         {

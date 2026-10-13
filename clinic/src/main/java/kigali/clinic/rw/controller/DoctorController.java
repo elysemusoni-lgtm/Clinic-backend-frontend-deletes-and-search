@@ -1,13 +1,16 @@
 package kigali.clinic.rw.controller;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import kigali.clinic.rw.domain.Appointment;
 import kigali.clinic.rw.domain.Doctor;
 import kigali.clinic.rw.service.DoctorService;
 
@@ -28,6 +31,19 @@ public class DoctorController {
     @GetMapping
     public List<Doctor> getAllDoctors() {
         return doctorService.getAllDoctors();
+    }
+
+    @GetMapping("/{doctorId}/agenda")
+    public ResponseEntity<?> getDoctorAgenda(
+            @PathVariable UUID doctorId,
+            @RequestParam LocalDate date) {
+        Optional<List<Appointment>> appointments = doctorService.getDoctorAgenda(doctorId, date);
+        if (appointments.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("The doctor with that id does not exist");
+        } else {
+            return ResponseEntity.ok(appointments.get());
+        }
     }
 
     @GetMapping("/without-office")
