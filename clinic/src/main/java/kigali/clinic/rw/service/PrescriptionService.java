@@ -1,6 +1,7 @@
 package kigali.clinic.rw.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -42,7 +43,11 @@ public class PrescriptionService {
         return prescriptionRepository.findAll();
     }
 
-    public List<Prescription> getPrescriptionsForAppointment(UUID appointmentId) {
-        return prescriptionRepository.findByAppointment_IdOrderByIssuedDateDesc(appointmentId);
+    public Optional<List<Prescription>> getPrescriptionsForAppointment(UUID appointmentId) {
+        if (!appointmentRepository.existsById(appointmentId)) {
+            return Optional.empty();
+        } else {
+            return Optional.of(prescriptionRepository.findByAppointment_IdOrderByIssuedDateDesc(appointmentId));
+        }
     }
 }

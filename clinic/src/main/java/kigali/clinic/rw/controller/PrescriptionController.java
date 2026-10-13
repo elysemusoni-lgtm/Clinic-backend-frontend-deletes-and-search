@@ -1,6 +1,7 @@
 package kigali.clinic.rw.controller;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,14 @@ public class PrescriptionController {
     }
 
     @GetMapping("/appointment/{appointmentId}")
-    public List<Prescription> getPrescriptionsForAppointment(@PathVariable UUID appointmentId) {
-        return prescriptionService.getPrescriptionsForAppointment(appointmentId);
+    public ResponseEntity<?> getPrescriptionsForAppointment(@PathVariable UUID appointmentId) {
+        Optional<List<Prescription>> prescriptions =
+                prescriptionService.getPrescriptionsForAppointment(appointmentId);
+        if (prescriptions.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("The appointment with that id does not exist");
+        } else {
+            return ResponseEntity.ok(prescriptions.get());
+        }
     }
 }
