@@ -31,6 +31,10 @@ public class OfficeService {
         return officeRepository.findAll();
     }
 
+    public List<Office> getFreeOffices() {
+        return officeRepository.findFreeOffices();
+    }
+
     public Optional<BusiestOffice> getBusiestOffice() {
         return appointmentRepository.findOfficesByAppointmentCount().stream().findFirst();
     }

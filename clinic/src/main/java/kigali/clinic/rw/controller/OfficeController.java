@@ -29,6 +29,11 @@ public class OfficeController {
         return officeService.getAllOffices();
     }
 
+    @GetMapping("/free")
+    public List<Office> getFreeOffices() {
+        return officeService.getFreeOffices();
+    }
+
     @GetMapping("/busiest")
     public ResponseEntity<?> getBusiestOffice() {
         return officeService.getBusiestOffice()
