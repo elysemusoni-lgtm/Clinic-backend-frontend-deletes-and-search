@@ -12,6 +12,8 @@ import kigali.clinic.rw.domain.Patient;
 // JpaRepository already gives us save(), findById(), findAll(), deleteById()
 // so we don't need to write those ourselves.
 public interface PatientRepository extends JpaRepository<Patient, UUID> {
+    boolean existsBySsNumber(String ssNumber);
+
     List<Patient> findByLastNameIgnoreCaseOrderByFirstNameAsc(String lastName);
 
     List<Patient> findByFirstNameIgnoreCaseOrderByLastNameAsc(String firstName);

@@ -22,6 +22,11 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
     List<Appointment> findByDoctor_IdAndAppointmentDateAndStatusNot(
             UUID doctorId, java.sql.Date appointmentDate, AppointmentStatus status);
 
+    List<Appointment> findByPatient_SsNumberAndAppointmentDateGreaterThanEqualAndStatusInOrderByAppointmentDateAsc(
+            String ssNumber,
+            java.sql.Date appointmentDate,
+            List<AppointmentStatus> statuses);
+
     List<Appointment> findByStatusOrderByAppointmentDateAsc(AppointmentStatus status);
 
     @Query("""

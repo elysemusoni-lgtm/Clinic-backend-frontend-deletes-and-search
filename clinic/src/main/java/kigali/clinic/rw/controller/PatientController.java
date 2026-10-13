@@ -1,14 +1,17 @@
 package kigali.clinic.rw.controller;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import kigali.clinic.rw.domain.Patient;
+import kigali.clinic.rw.domain.Appointment;
 import kigali.clinic.rw.service.PatientService;
 
 @RestController
@@ -28,6 +31,17 @@ public class PatientController {
     @GetMapping
     public List<Patient> getAllPatients() {
         return patientService.getAllPatients();
+    }
+
+    @GetMapping("/{ssNumber}/upcoming")
+    public ResponseEntity<?> getUpcomingAppointments(@PathVariable String ssNumber) {
+        Optional<List<Appointment>> appointments = patientService.getUpcomingAppointments(ssNumber);
+        if (appointments.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("That patient with that ssnumber does not exist");
+        } else {
+            return ResponseEntity.ok(appointments.get());
+        }
     }
 
     @GetMapping("/frequent")

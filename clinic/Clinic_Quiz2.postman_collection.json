@@ -365,6 +365,28 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "Upcoming Appointments by Patient SS Number",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8082/api/patients/{{ssNumber}}/upcoming",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "patients",
+            "{{ssNumber}}",
+            "upcoming"
+          ]
+        }
+      },
+      "response": []
     }
   ]
 }
