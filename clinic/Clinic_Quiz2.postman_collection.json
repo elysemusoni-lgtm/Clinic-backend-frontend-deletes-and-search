@@ -12,15 +12,6 @@
       "request": {
         "method": "PUT",
         "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n  \"appointmentDate\": \"2026-10-23\",\r\n  \"reason\": \"General checkup\",\r\n  \"status\": \"COMPLETED\",\r\n  \"patient\": {\r\n    \"id\": \"cc5a6a1c-749f-41b3-8212-781b4a60af1e\"\r\n  },\r\n  \"doctor\": {\r\n    \"id\": \"6826b5a0-28d3-4629-a38f-ffb0e954d536\"\r\n  }\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
         "url": {
           "raw": "http://localhost:8082/api/doctors/479ff65d-97cb-4a2b-add7-63ce87b20bfe/specializations/8a04668e-69cc-47d5-9aab-b6660074c237",
           "protocol": "http",
@@ -114,6 +105,188 @@
             {
               "key": "officeNumber",
               "value": "104"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "B1 Safe Booking",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Booking succeeds', function () { pm.response.to.have.status(200); });",
+              "const appointment = pm.response.json();",
+              "pm.test('New appointment starts as SCHEDULED', function () { pm.expect(appointment.status).to.eql('SCHEDULED'); });",
+              "pm.collectionVariables.set('appointmentId', appointment.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"appointmentDate\": \"2026-10-23\",\n  \"reason\": \"General checkup\",\n  \"status\": \"COMPLETED\",\n  \"patient\": { \"id\": \"a15d9523-2092-4ec3-9a5d-d6efd6c7893d\" },\n  \"doctor\": { \"id\": \"6826b5a0-28d3-4629-a381-ffb0e954d536\" }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8082/api/appointments/save",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "appointments",
+            "save"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "B1 Reject Past Booking",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Past booking is rejected', function () {",
+              "  pm.response.to.have.status(400);",
+              "  pm.expect(pm.response.text()).to.eql('Appointment date cannot be in the past');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"appointmentDate\": \"2020-01-01\",\n  \"reason\": \"Past appointment\",\n  \"status\": \"CANCELLED\",\n  \"patient\": { \"id\": \"a15d9523-2092-4ec3-9a5d-d6efd6c7893d\" },\n  \"doctor\": { \"id\": \"6826b5a0-28d3-4629-a381-ffb0e954d536\" }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8082/api/appointments/save",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "appointments",
+            "save"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Appointment Status: Confirm",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Scheduled appointment can be confirmed', function () {",
+              "  pm.response.to.have.status(200);",
+              "  pm.expect(pm.response.text()).to.eql('Appointment status updated successfully');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8082/api/appointments/{{appointmentId}}/status?status=CONFIRMED",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "appointments",
+            "{{appointmentId}}",
+            "status"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "CONFIRMED"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Appointment Status: Reject Invalid Transition",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Invalid transition is rejected', function () {",
+              "  pm.response.to.have.status(400);",
+              "  pm.expect(pm.response.text()).to.eql('Cannot change status from CONFIRMED to SCHEDULED');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8082/api/appointments/{{appointmentId}}/status?status=SCHEDULED",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "appointments",
+            "{{appointmentId}}",
+            "status"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "SCHEDULED"
             }
           ]
         }

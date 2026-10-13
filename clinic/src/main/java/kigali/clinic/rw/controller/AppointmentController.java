@@ -41,6 +41,20 @@ public class AppointmentController {
         }
     }
 
+    @PatchMapping("/{appointmentId}/status")
+    public ResponseEntity<String> updateAppointmentStatus(
+            @PathVariable UUID appointmentId,
+            @RequestParam AppointmentStatus status) {
+        String message = appointmentService.updateAppointmentStatus(appointmentId, status);
+        if (message.startsWith("Cannot change status from ")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+        } else if (message.equals("Appointment not found")) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+        } else {
+            return ResponseEntity.ok(message);
+        }
+    }
+
     @GetMapping("/by-status")
     public List<Appointment> getAppointmentsByStatus(@RequestParam AppointmentStatus status) {
         return appointmentService.getAppointmentsByStatus(status);

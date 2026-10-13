@@ -73,6 +73,27 @@ public class AppointmentService {
         return "";
     }
 
+    @Transactional
+    public String updateAppointmentStatus(UUID appointmentId, AppointmentStatus newStatus) {
+        Appointment appointment = appointmentRepository.findById(appointmentId).orElse(null);
+        if (appointment == null) {
+            return "Appointment not found";
+        }
+
+        AppointmentStatus currentStatus = appointment.getStatus();
+        boolean allowed = (currentStatus == AppointmentStatus.SCHEDULED
+                    && (newStatus == AppointmentStatus.CONFIRMED || newStatus == AppointmentStatus.CANCELLED))
+                || (currentStatus == AppointmentStatus.CONFIRMED
+                    && (newStatus == AppointmentStatus.COMPLETED || newStatus == AppointmentStatus.CANCELLED));
+        if (!allowed) {
+            return "Cannot change status from " + currentStatus + " to " + newStatus;
+        }
+
+        appointment.setStatus(newStatus);
+        appointmentRepository.save(appointment);
+        return "Appointment status updated successfully";
+    }
+
     public List<Appointment> getScheduledAppointmentsForDoctor(UUID doctorId) {
         return appointmentRepository.findByDoctor_IdAndStatusOrderByAppointmentDateAsc(
                 doctorId, AppointmentStatus.SCHEDULED);
