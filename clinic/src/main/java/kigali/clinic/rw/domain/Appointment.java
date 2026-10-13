@@ -1,6 +1,8 @@
 package kigali.clinic.rw.domain;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -15,6 +17,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity 
@@ -43,6 +46,9 @@ public class Appointment {
     @ManyToOne 
     @JoinColumn (name="doctor_id")
     private Doctor doctor;
+
+    @OneToMany(mappedBy = "appointment")
+    private List<Prescription> prescriptions = new ArrayList<>();
 
     public UUID getId() {
         return id;
@@ -88,7 +94,13 @@ public class Appointment {
         this.doctor = doctor;
     }
 
-    
+    public List<Prescription> getPrescriptions() {
+        return prescriptions;
+    }
+
+    public void setPrescriptions(List<Prescription> prescriptions) {
+        this.prescriptions = prescriptions;
+    }
 
 
 }

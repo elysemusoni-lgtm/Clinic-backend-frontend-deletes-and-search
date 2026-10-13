@@ -161,6 +161,60 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "Create Prescription",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"medicineName\": \"Amoxicillin\",\n  \"dosage\": \"1 tablet, 3 times a day\",\n  \"durationDays\": 7,\n  \"issuedDate\": \"2026-10-13\",\n  \"appointment\": {\n    \"id\": \"{{appointmentId}}\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8082/api/prescriptions",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "prescriptions"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Prescriptions",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8082/api/prescriptions",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "prescriptions"
+          ]
+        }
+      },
+      "response": []
     }
   ]
 }
