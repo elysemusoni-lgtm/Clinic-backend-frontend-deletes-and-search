@@ -54,4 +54,28 @@ public class PrescriptionService {
     public List<Prescription> getPrescriptionsForPatient(String ssNumber) {
         return prescriptionRepository.findByPatientSsNumber(ssNumber);
     }
+
+    @Transactional
+    public String updatePrescription(UUID id, Prescription newData) {
+        Prescription prescription = prescriptionRepository.findById(id).orElse(null);
+        if (prescription == null) {
+            return "The prescription with that id does not exist";
+        } else {
+            prescription.setMedicineName(newData.getMedicineName());
+            prescription.setDosage(newData.getDosage());
+            prescription.setDurationDays(newData.getDurationDays());
+            prescriptionRepository.save(prescription);
+            return "Prescription updated successfully";
+        }
+    }
+
+    @Transactional
+    public String deletePrescription(UUID id) {
+        if (!prescriptionRepository.existsById(id)) {
+            return "The prescription with that id does not exist";
+        } else {
+            prescriptionRepository.deleteById(id);
+            return "Prescription deleted successfully";
+        }
+    }
 }

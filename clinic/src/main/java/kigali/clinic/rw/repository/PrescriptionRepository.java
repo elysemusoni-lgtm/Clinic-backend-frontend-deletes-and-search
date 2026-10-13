@@ -13,6 +13,8 @@ public interface PrescriptionRepository extends JpaRepository<Prescription, UUID
 
     List<Prescription> findByAppointment_IdOrderByIssuedDateDesc(UUID appointmentId);
 
+    boolean existsByAppointment_Id(UUID appointmentId);
+
     @Query("""
             SELECT p
             FROM Prescription p

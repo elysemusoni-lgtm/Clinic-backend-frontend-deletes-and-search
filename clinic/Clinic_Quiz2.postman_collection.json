@@ -258,6 +258,85 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "Update Prescription",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"medicineName\": \"Amoxicillin\",\n  \"dosage\": \"1 tablet, 2 times a day\",\n  \"durationDays\": 5\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8082/api/prescriptions/update/{{prescriptionId}}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "prescriptions",
+            "update",
+            "{{prescriptionId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Prescription",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8082/api/prescriptions/delete/{{prescriptionId}}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "prescriptions",
+            "delete",
+            "{{prescriptionId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Appointment",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8082/api/appointments/{{appointmentId}}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "appointments",
+            "{{appointmentId}}"
+          ]
+        }
+      },
+      "response": []
     }
   ]
 }

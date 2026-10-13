@@ -20,6 +20,7 @@ import kigali.clinic.rw.repository.AppointmentRepository.DoctorAppointmentCount;
 import kigali.clinic.rw.repository.AppointmentRepository.PastPendingAppointment;
 import kigali.clinic.rw.repository.DoctorRepository;
 import kigali.clinic.rw.repository.PatientRepository;
+import kigali.clinic.rw.repository.PrescriptionRepository;
 
 @Service
 public class AppointmentService {
@@ -32,6 +33,9 @@ public class AppointmentService {
 
     @Autowired
     private DoctorRepository doctorRepository;
+
+    @Autowired
+    private PrescriptionRepository prescriptionRepository;
 
     @Transactional
     public Appointment createAppointment(Appointment appointment) {
@@ -163,5 +167,17 @@ public class AppointmentService {
     public Page<Appointment> getDoctorAppointments(UUID doctorId, int page, int size) {
         return appointmentRepository.findByDoctor_IdOrderByAppointmentDateAsc(
                 doctorId, PageRequest.of(page, size));
+    }
+
+    @Transactional
+    public String deleteAppointment(UUID appointmentId) {
+        if (!appointmentRepository.existsById(appointmentId)) {
+            return "The appointment with that id does not exist";
+        } else if (prescriptionRepository.existsByAppointment_Id(appointmentId)) {
+            return "That appointment has prescriptions, delete them first";
+        } else {
+            appointmentRepository.deleteById(appointmentId);
+            return "Appointment deleted successfully";
+        }
     }
 }

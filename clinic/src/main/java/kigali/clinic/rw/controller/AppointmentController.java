@@ -130,4 +130,16 @@ public class AppointmentController {
             @RequestParam(defaultValue = "10") int size) {
         return appointmentService.getDoctorAppointments(doctorId, page, size);
     }
+
+    @DeleteMapping("/{appointmentId}")
+    public ResponseEntity<String> deleteAppointment(@PathVariable UUID appointmentId) {
+        String message = appointmentService.deleteAppointment(appointmentId);
+        if (message.equals("The appointment with that id does not exist")) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+        } else if (message.equals("That appointment has prescriptions, delete them first")) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(message);
+        } else {
+            return ResponseEntity.ok(message);
+        }
+    }
 }
