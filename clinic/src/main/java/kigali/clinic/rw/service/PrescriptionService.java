@@ -43,6 +43,10 @@ public class PrescriptionService {
         return prescriptionRepository.findAll();
     }
 
+    public List<Object[]> getTopMedicines() {
+        return prescriptionRepository.findTopMedicines();
+    }
+
     public Optional<List<Prescription>> getPrescriptionsForAppointment(UUID appointmentId) {
         if (!appointmentRepository.existsById(appointmentId)) {
             return Optional.empty();

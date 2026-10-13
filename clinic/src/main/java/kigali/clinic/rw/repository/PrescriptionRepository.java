@@ -11,6 +11,14 @@ import kigali.clinic.rw.domain.Prescription;
 
 public interface PrescriptionRepository extends JpaRepository<Prescription, UUID> {
 
+    @Query("""
+            SELECT p.medicineName, COUNT(p)
+            FROM Prescription p
+            GROUP BY p.medicineName
+            ORDER BY COUNT(p) DESC
+            """)
+    List<Object[]> findTopMedicines();
+
     List<Prescription> findByAppointment_IdOrderByIssuedDateDesc(UUID appointmentId);
 
     boolean existsByAppointment_Id(UUID appointmentId);

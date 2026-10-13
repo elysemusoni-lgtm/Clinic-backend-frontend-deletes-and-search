@@ -38,6 +38,11 @@ public class PrescriptionController {
         return prescriptionService.getAllPrescriptions();
     }
 
+    @GetMapping("/stats/top-medicines")
+    public List<Object[]> getTopMedicines() {
+        return prescriptionService.getTopMedicines();
+    }
+
     @GetMapping("/appointment/{appointmentId}")
     public ResponseEntity<?> getPrescriptionsForAppointment(@PathVariable UUID appointmentId) {
         Optional<List<Prescription>> prescriptions =

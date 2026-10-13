@@ -293,6 +293,28 @@
       "response": []
     },
     {
+      "name": "Most Prescribed Medicines",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8082/api/prescriptions/stats/top-medicines",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "prescriptions",
+            "stats",
+            "top-medicines"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
       "name": "Prescription History by Patient SS Number",
       "request": {
         "method": "GET",
