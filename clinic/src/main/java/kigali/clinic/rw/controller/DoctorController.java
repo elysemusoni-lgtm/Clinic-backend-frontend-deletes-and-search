@@ -33,6 +33,11 @@ public class DoctorController {
         return doctorService.getAllDoctors();
     }
 
+    @GetMapping("/search")
+    public List<Doctor> searchDoctorsByName(@RequestParam String name) {
+        return doctorService.searchDoctorsByName(name);
+    }
+
     @GetMapping("/{doctorId}/agenda")
     public ResponseEntity<?> getDoctorAgenda(
             @PathVariable UUID doctorId,

@@ -149,6 +149,33 @@
       "response": []
     },
     {
+      "name": "Search Doctors by Name",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8082/api/doctors/search?name=gis",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "doctors",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "name",
+              "value": "gis"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
       "name": "Reschedule Appointment",
       "event": [
         {

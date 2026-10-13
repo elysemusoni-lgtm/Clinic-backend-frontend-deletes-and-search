@@ -50,6 +50,10 @@ public class DoctorService {
         return doctorRepository.findAll();
     }
 
+    public List<Doctor> searchDoctorsByName(String name) {
+        return doctorRepository.searchByName(name);
+    }
+
     public Optional<List<Appointment>> getDoctorAgenda(UUID doctorId, LocalDate date) {
         if (!doctorRepository.existsById(doctorId)) {
             return Optional.empty();
