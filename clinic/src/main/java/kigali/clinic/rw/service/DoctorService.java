@@ -54,6 +54,10 @@ public class DoctorService {
         return doctorRepository.searchByName(name);
     }
 
+    public List<Object[]> getDoctorWorkload(LocalDate start, LocalDate end) {
+        return doctorRepository.findDoctorWorkload(Date.valueOf(start), Date.valueOf(end));
+    }
+
     public Optional<List<Appointment>> getDoctorAgenda(UUID doctorId, LocalDate date) {
         if (!doctorRepository.existsById(doctorId)) {
             return Optional.empty();

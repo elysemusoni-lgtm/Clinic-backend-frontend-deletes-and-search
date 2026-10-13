@@ -38,6 +38,13 @@ public class DoctorController {
         return doctorService.searchDoctorsByName(name);
     }
 
+    @GetMapping("/workload")
+    public List<Object[]> getDoctorWorkload(
+            @RequestParam LocalDate start,
+            @RequestParam LocalDate end) {
+        return doctorService.getDoctorWorkload(start, end);
+    }
+
     @GetMapping("/{doctorId}/agenda")
     public ResponseEntity<?> getDoctorAgenda(
             @PathVariable UUID doctorId,
