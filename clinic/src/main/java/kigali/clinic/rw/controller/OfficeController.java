@@ -12,6 +12,7 @@ import kigali.clinic.rw.service.OfficeService;
 
 @RestController
 @RequestMapping("/api/offices")
+@CrossOrigin(origins = "http://localhost:5173")
 public class OfficeController {
 
     @Autowired
@@ -24,9 +25,14 @@ public class OfficeController {
     }
 
     // READ all -> GET /api/offices
-    @GetMapping
-    public List<Office> getAllOffices() {
-        return officeService.getAllOffices();
+    @GetMapping({ "", "/" })
+    public List<OfficeResponse> getAllOffices() {
+        return officeService.getAllOffices().stream()
+                .map(office -> new OfficeResponse(
+                        office.getId(),
+                        office.getName(),
+                        office.getOfficeNumber()))
+                .toList();
     }
 
     @GetMapping("/free")
@@ -67,5 +73,8 @@ public class OfficeController {
     @DeleteMapping("/{id}")
     public void deleteOffice(@PathVariable UUID id) {
         officeService.deleteOffice(id);
+    }
+
+    public record OfficeResponse(UUID id, String name, int officeNumber) {
     }
 }

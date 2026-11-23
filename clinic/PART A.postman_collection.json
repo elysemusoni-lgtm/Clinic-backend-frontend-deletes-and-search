@@ -1,0 +1,92 @@
+{
+  "info": {
+    "_postman_id": "e05eb510-5bc9-49d1-aec5-977f31c9aa16",
+    "name": "PART A",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58561491",
+    "_collection_link": "https://go.postman.co/collection/58561491-e05eb510-5bc9-49d1-aec5-977f31c9aa16?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "A2_Save returns 201 \"Complaint saved successfully",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"filedDate\": \"2026-10-20\", \"status\": \"RESOLVED\", \"subject\": \"Double charge\", \"description\": \"Charged twice for one month\",\r\n \"complainant\": {\"id\": \"f6fa7c03-6118-4a6d-8a32-ffb0c12f8b74\"}, \"supportAgent\": {\"id\": \"191e3f1c-0cb7-4c80-bd6b-dc324277a8f6\"}}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/complaints/save",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "complaints",
+            "save"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "A2_Get by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"filedDate\": \"2026-11-20\", \"status\": \"OPEN\", \"subject\": \"Double charge\", \"description\": \"Charged twice for one month\",\r\n \"complainant\": {\"id\": \"b8c6d8c0-41de-4197-a04b-85524358f599\"}, \"supportAgent\": {\"id\": \"8ec5ae87-080d-4f16-86d4-34031b7d9124\"}}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080 /api/complaints/068c825b-fe64-44c2-962c-3971a8c4bc20",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080 ",
+          "path": [
+            "api",
+            "complaints",
+            "068c825b-fe64-44c2-962c-3971a8c4bc20"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "A2_404 complaint with id not exist",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/complaints/51b74435-06f9-40fe-a1b4-a96ed0d6dc9a",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "complaints",
+            "51b74435-06f9-40fe-a1b4-a96ed0d6dc9a"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
